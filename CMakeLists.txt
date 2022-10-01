@@ -13,7 +13,10 @@ include_directories(Arrabbiata PRIVATE "lib/glm")
 
 # Create .exe
 add_executable(Arrabbiata
-        src/main.cpp src/main.hpp)
+        src/main.cpp src/main.hpp src/global.hpp src/global.hpp
+        src/platform/platform.cpp src/platform/platform.hpp
+        src/gfx/renderer.cpp src/gfx/renderer.hpp
+        src/input/input.cpp src/input/input.hpp src/time/time.cpp src/time/time.hpp)
 
 # Links libraries
 target_link_directories(Arrabbiata PRIVATE "lib/bgfx/.build/")
