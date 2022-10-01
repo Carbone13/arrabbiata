@@ -3,6 +3,6 @@
 void Time::poll()
 {
     auto now = glfwGetTime();
-    delta = lastTime - now;
+    delta = now - lastTime;
     lastTime = now;
 }

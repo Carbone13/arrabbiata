@@ -1,3 +1,4 @@
+#include <iomanip>
 #include "global.hpp"
 
 #include "platform/platform.hpp"
@@ -9,6 +10,18 @@
 #include "atlas/atlas.hpp"
 
 Global global {};
+
+void debug ()
+{
+    auto dt = std::stringstream() << "FRAME: "
+                                  << std::fixed << std::setprecision(3)
+                                  << global.time->delta << " ms";
+    bgfx::dbgTextPrintf(0, 0, ((0x2 + 0) << 4) | 0xF, dt.str().c_str());
+    
+    auto str =
+            std::stringstream() << "DRAW CALL: " << bgfx::getStats()->numDraw;
+    bgfx::dbgTextPrintf(0, 1, ((0x2 + 1) << 4) | 0xF, str.str().c_str());
+}
 
 int main ()
 {
@@ -57,6 +70,7 @@ int main ()
                                           glm::vec2(+3.0f, -2.0f)
                                         });
         global.renderer->submit();
+        debug();
     }
 
     closeApplication();
