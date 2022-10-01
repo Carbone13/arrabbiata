@@ -1,7 +1,6 @@
 #ifndef ARRABBIATA_INPUT_HPP
 #define ARRABBIATA_INPUT_HPP
 
-#include "global.hpp"
 #include "platform/platform.hpp"
 
 struct Input

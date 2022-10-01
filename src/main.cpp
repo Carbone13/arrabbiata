@@ -4,6 +4,9 @@
 #include "gfx/renderer.hpp"
 #include "input/input.hpp"
 #include "time/time.hpp"
+#include "camera/camera.hpp"
+#include "resource_loader/resource_loader.hpp"
+#include "atlas/atlas.hpp"
 
 Global global {};
 
@@ -15,21 +18,45 @@ int main ()
     Renderer renderer;
     global.renderer = &renderer;
 
-    Input input ;
-    global.input = &input;
+    Time time;
+    global.time = &time;
+
+    Camera camera;
+    global.camera = &camera;
+
+    ResourceLoader resourceLoader;
+    global.resourceLoader = &resourceLoader;
+
+    Atlas atlas;
+    global.atlas = &atlas;
 
     while (!glfwWindowShouldClose(global.platform->window))
     {
         global.platform->poll();
+        global.renderer->prepare();
         global.time->poll();
 
         // check if escape is pressed
-        if (global.input->keyPressed(GLFW_KEY_ESCAPE))
+        if (Input::keyPressed(GLFW_KEY_ESCAPE))
         {
             glfwSetWindowShouldClose(global.platform->window, 1); // exit
         }
 
-        bgfx::frame();
+        global.renderer->render(global.atlas->atlas,
+                                Renderer::SpriteEntry
+                                { glm::vec4(0, 0, 6, 4)
+                                });
+        global.renderer->render(global.atlas->atlas,
+                                Renderer::SpriteEntry
+                                        { glm::vec4(0, 0, 6, 4),
+                                          glm::vec2(-3.0f, 2.0f)
+                                        });
+        global.renderer->render(global.atlas->atlas,
+                                Renderer::SpriteEntry
+                                        { glm::vec4(0, 0, 6, 4),
+                                          glm::vec2(+3.0f, -2.0f)
+                                        });
+        global.renderer->submit();
     }
 
     closeApplication();

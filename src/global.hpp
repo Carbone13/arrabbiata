@@ -6,17 +6,24 @@
 #define WINDOW_WIDTH 1600
 #define WINDOW_HEIGHT 900
 
+#define RENDER_WIDTH 16
+#define RENDER_HEIGHT 9
+
 struct Platform;
 struct Renderer;
-struct Input;
 struct Time;
+struct Camera;
+struct ResourceLoader;
+struct Atlas;
 
 struct Global
 {
     Platform *platform;
     Renderer *renderer;
-    Input *input;
     Time *time;
+    Camera *camera;
+    ResourceLoader *resourceLoader;
+    Atlas *atlas;
 
     Global () = default;
 };
