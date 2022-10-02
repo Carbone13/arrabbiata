@@ -9,5 +9,15 @@ const uint64_t pixelArtFlags =
 
 Atlas::Atlas()
 {
-    atlas = global.resourceLoader->loadTexture("res/atlas.png", pixelArtFlags, 0, &info);
+    // load atlases
+
+    bgfx::TextureInfo info{};
+    atlases[*"main_atlas"] = std::pair<bgfx::TextureHandle, bgfx::TextureInfo>
+            (global.resourceLoader->loadTexture("res/atlas.png", pixelArtFlags, 0, &info),
+                                            info);
+
+    // load textures
+    insertTexture("blue_rect", "main_atlas", glm::vec4(0, 0, 6, 4));
+    insertTexture("yellow_rect", "main_atlas", glm::vec4(6, 0, 4, 4));
+    insertTexture("green_rect", "main_atlas", glm::vec4(0, 4, 16, 5));
 }

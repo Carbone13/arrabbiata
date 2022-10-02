@@ -25,23 +25,23 @@ void debug ()
 
 int main ()
 {
-    Platform platform;
+    Platform platform {};
     global.platform = &platform;
 
-    Renderer renderer;
+    Renderer renderer {};
     global.renderer = &renderer;
 
-    Time time;
-    global.time = &time;
-
-    Camera camera;
-    global.camera = &camera;
-
-    ResourceLoader resourceLoader;
+    ResourceLoader resourceLoader {};
     global.resourceLoader = &resourceLoader;
 
-    Atlas atlas;
+    Atlas atlas {};
     global.atlas = &atlas;
+
+    Time time {};
+    global.time = &time;
+
+    Camera camera {};
+    global.camera = &camera;
 
     while (!glfwWindowShouldClose(global.platform->window))
     {
@@ -55,20 +55,15 @@ int main ()
             glfwSetWindowShouldClose(global.platform->window, 1); // exit
         }
 
-        global.renderer->render(global.atlas->atlas,
-                                Renderer::SpriteEntry
-                                { glm::vec4(0, 0, 6, 4)
-                                });
-        global.renderer->render(global.atlas->atlas,
-                                Renderer::SpriteEntry
-                                        { glm::vec4(0, 0, 6, 4),
-                                          glm::vec2(-3.0f, 2.0f)
-                                        });
-        global.renderer->render(global.atlas->atlas,
-                                Renderer::SpriteEntry
-                                        { glm::vec4(0, 0, 6, 4),
-                                          glm::vec2(+3.0f, -2.0f)
-                                        });
+        auto blue_rect = global.atlas->textures[*"blue_rect"];
+        auto yellow_rect = global.atlas->textures[*"yellow_rect"];
+        auto green_rect = global.atlas->textures[*"green_rect"];
+
+        global.renderer->render(blue_rect, glm::vec2(4.0, -3.0f));
+        //global.renderer->render(blue_rect, glm::vec2(-2.0, 1.0f));
+        global.renderer->render(yellow_rect, glm::vec2(-4.0, 3.0f));
+        //global.renderer->render(green_rect, glm::vec2(0.0, 0.0f));
+
         global.renderer->submit();
         debug();
     }

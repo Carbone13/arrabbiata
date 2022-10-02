@@ -20,7 +20,7 @@ struct Renderer
 {
     struct SpriteEntry
     {
-        glm::vec4 area;
+        AtlasTexture texture;
         glm::vec2 position {0.0f};
         glm::vec2 scale {1.0f};
         float rotation { 0.0f};
@@ -30,13 +30,14 @@ struct Renderer
     Renderer ();
 
     void prepare ();
-    void render (bgfx::TextureHandle atlas, SpriteEntry sprite);
+    void render (SpriteEntry sprite);
+    void render (AtlasTexture texture, glm::vec2 position = glm::vec2(0.0f), glm::vec2 scale = glm::vec2{1.0f}, float rotation = 0);
     void submit ();
 
 private:
     const int stride = 64 + 16;
 
-    std::map<bgfx::TextureHandle*, std::vector<SpriteEntry>> batches;
+    std::map<char, std::vector<SpriteEntry>> batches;
 
     bgfx::UniformHandle s_Texture {bgfx::kInvalidHandle};
     bgfx::ProgramHandle program {bgfx::kInvalidHandle};

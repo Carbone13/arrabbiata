@@ -52,7 +52,7 @@ Renderer::Renderer()
 
 void Renderer::prepare()
 {
-    bgfx::touch(0);
+    //bgfx::touch(0);
     global.camera->prepare();
 }
 
@@ -60,11 +60,13 @@ void Renderer::submit()
 {
     for (const auto& batch : batches)
     {
-        auto texture = *batch.first;
+        auto atlas = global.atlas->atlases[batch.first].first;
+        auto atlasInfo = global.atlas->atlases[batch.first].second;
+
         auto sprites = batch.second;
 
         // bind texture
-        bgfx::setTexture(0, s_Texture, texture);
+        bgfx::setTexture(0, s_Texture, atlas);
 
         bgfx::InstanceDataBuffer idb{};
         bgfx::allocInstanceDataBuffer(&idb, sprites.size(), stride);
@@ -72,22 +74,25 @@ void Renderer::submit()
 
         for (auto sprite : sprites)
         {
+            auto spriteArea = sprite.texture.area;
+            auto scale = sprite.scale * glm::vec2(sprite.texture.area.z, sprite.texture.area.w);
+
             auto* mtx = (glm::mat4x4*)(float*)data;
 
             // translate
             *mtx = glm::translate(glm::mat4x4{1.0f}, glm::vec3(sprite.position, 0.0f));
             // rotate (centered pivot)
-            *mtx = glm::translate(*mtx, glm::vec3(0.5f * sprite.scale.x, 0.5f * sprite.scale.y, 0.0f));
+            *mtx = glm::translate(*mtx, glm::vec3(0.5f * scale.x, 0.5f * scale.y, 0.0f));
             *mtx = glm::rotate(*mtx, glm::radians(sprite.rotation), glm::vec3(0.0f, 0.0f, 1.0f));
-            *mtx = glm::translate(*mtx, glm::vec3(-0.5f * sprite.scale.x, -0.5f * sprite.scale.y, 0.0f));
+            *mtx = glm::translate(*mtx, glm::vec3(-0.5f * scale.x, -0.5f * scale.y, 0.0f));
             // scale
-            *mtx = glm::scale(*mtx, glm::vec3(sprite.scale, 1.0f));
+            *mtx = glm::scale(*mtx, glm::vec3(scale, 1.0f));
 
             auto* area = (float*)&data[64];
-            area[0] = sprite.area.x / (float)global.atlas->info.width;
-            area[1] = sprite.area.y / (float)global.atlas->info.height;
-            area[2] = sprite.area.z / (float)global.atlas->info.width;
-            area[3] = sprite.area.w / (float)global.atlas->info.height;
+            area[0] = spriteArea.x / (float)atlasInfo.width;
+            area[1] = spriteArea.y / (float)atlasInfo.height;
+            area[2] = spriteArea.z / (float)atlasInfo.width;
+            area[3] = spriteArea.w / (float)atlasInfo.height;
 
             data += stride;
         }
@@ -111,9 +116,14 @@ void Renderer::submit()
     bgfx::frame();
 }
 
-void Renderer::render(bgfx::TextureHandle atlas, Renderer::SpriteEntry sprite)
+void Renderer::render(Renderer::SpriteEntry sprite)
 {
-    batches[&atlas].push_back(sprite);
+    batches[sprite.texture.atlas].push_back(sprite);
+}
+
+void Renderer::render(AtlasTexture texture, glm::vec2 position, glm::vec2 scale, float rotation)
+{
+    batches[texture.atlas].push_back({texture, position, scale, rotation});
 }
 
 
