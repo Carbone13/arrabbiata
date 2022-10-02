@@ -1,14 +1,23 @@
 #define GLFW_EXPOSE_NATIVE_WIN32
-
 #include "renderer.hpp"
-
+#include <iostream>
+// window
+#include "GLFW/glfw3.h"
+#include "GLFW/glfw3native.h"
+// shaders
 #include "_compiled/shaders/sprite/sprite.vs.hpp"
 #include "_compiled/shaders/sprite/sprite.fs.hpp"
+// refs
+#include "global.hpp"
+#include "platform/platform.hpp"
+#include "camera/camera.hpp"
+// maths
+#include <glm/ext/matrix_transform.hpp>
 
 void initializeBgfx ()
 {
     bgfx::Init i {};
-    bgfx::PlatformData pd {};
+    PlatformData pd {};
     pd.nwh = glfwGetWin32Window(global.platform->window);
 
     i.type = bgfx::RendererType::Count; // automatically choose a renderer
@@ -75,18 +84,18 @@ void Renderer::submit()
         for (auto sprite : sprites)
         {
             auto spriteArea = sprite.texture.area;
-            auto scale = sprite.scale * glm::vec2(sprite.texture.area.z, sprite.texture.area.w);
+            auto scale = sprite.scale * vec2(sprite.texture.area.z, sprite.texture.area.w);
 
-            auto* mtx = (glm::mat4x4*)(float*)data;
+            auto* mtx = (mat4x4*)(float*)data;
 
             // translate
-            *mtx = glm::translate(glm::mat4x4{1.0f}, glm::vec3(sprite.position, 0.0f));
+            *mtx = translate(mat4x4{1.0f}, vec3(sprite.position, 0.0f));
             // rotate (centered pivot)
-            *mtx = glm::translate(*mtx, glm::vec3(0.5f * scale.x, 0.5f * scale.y, 0.0f));
-            *mtx = glm::rotate(*mtx, glm::radians(sprite.rotation), glm::vec3(0.0f, 0.0f, 1.0f));
-            *mtx = glm::translate(*mtx, glm::vec3(-0.5f * scale.x, -0.5f * scale.y, 0.0f));
+            *mtx = translate(*mtx, vec3(0.5f * scale.x, 0.5f * scale.y, 0.0f));
+            *mtx = rotate(*mtx, glm::radians(sprite.rotation), vec3(0.0f, 0.0f, 1.0f));
+            *mtx = translate(*mtx, vec3(-0.5f * scale.x, -0.5f * scale.y, 0.0f));
             // scale
-            *mtx = glm::scale(*mtx, glm::vec3(scale, 1.0f));
+            *mtx = glm::scale(*mtx, vec3(scale, 1.0f));
 
             auto* area = (float*)&data[64];
             area[0] = spriteArea.x / (float)atlasInfo.width;
@@ -121,7 +130,7 @@ void Renderer::render(Renderer::SpriteEntry sprite)
     batches[sprite.texture.atlas].push_back(sprite);
 }
 
-void Renderer::render(AtlasTexture texture, glm::vec2 position, glm::vec2 scale, float rotation)
+void Renderer::render(AtlasTexture texture, vec2 position, vec2 scale, float rotation)
 {
     batches[texture.atlas].push_back({texture, position, scale, rotation});
 }

@@ -1,8 +1,6 @@
 #ifndef ARRABBIATA_GLOBAL_HPP
 #define ARRABBIATA_GLOBAL_HPP
 
-#include "main.hpp"
-
 #define WINDOW_WIDTH 1600
 #define WINDOW_HEIGHT 900
 

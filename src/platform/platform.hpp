@@ -2,7 +2,6 @@
 #define ARRABBIATA_PLATFORM_HPP
 
 #include <global.hpp>
-
 #include "GLFW/glfw3.h"
 
 struct Platform

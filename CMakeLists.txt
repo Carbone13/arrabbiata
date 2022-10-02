@@ -11,6 +11,7 @@ include_directories(Arrabbiata PRIVATE "lib/bx/include")
 include_directories(Arrabbiata PRIVATE "lib/glfw/include")
 include_directories(Arrabbiata PRIVATE "lib/bimg/include")
 include_directories(Arrabbiata PRIVATE "lib/glm")
+include_directories(Arrabbiata PRIVATE "lib/stb")
 
 # Create .exe
 add_executable(Arrabbiata
@@ -22,7 +23,7 @@ add_executable(Arrabbiata
         src/gfx/vertex.hpp
         src/camera/camera.cpp src/camera/camera.hpp
         src/atlas/atlas.cpp src/atlas/atlas.hpp
-        src/resource_loader/resource_loader.cpp src/resource_loader/resource_loader.hpp src/atlas/atlas_texture.hpp)
+        src/resource_loader/resource_loader.cpp src/resource_loader/resource_loader.hpp)
 
 # Links libraries
 target_link_directories(Arrabbiata PRIVATE "lib/bgfx/.build/")

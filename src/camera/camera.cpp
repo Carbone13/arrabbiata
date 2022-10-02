@@ -1,4 +1,5 @@
 #include "camera.hpp"
+#include <glm/ext/matrix_transform.hpp>
 
 void Camera::setPosition(glm::vec2 _position)
 {

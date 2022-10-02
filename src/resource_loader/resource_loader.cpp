@@ -1,5 +1,6 @@
 #include "resource_loader.hpp"
 
+
 void* load(bx::FileReaderI* _reader, bx::AllocatorI* _allocator, const char* _filePath, uint32_t* _size)
 {
     if (bx::open(_reader, _filePath) )
@@ -25,7 +26,6 @@ void* load(bx::FileReaderI* _reader, bx::AllocatorI* _allocator, const char* _fi
 
     return nullptr;
 }
-
 
 void ResourceLoader::unload(void* _ptr)
 {
